@@ -40,22 +40,22 @@ Kết hợp TẤT CẢ những gì đã học trong 1 project hoàn chỉnh.
 
 ---
 
-## Chạy Local
+## Chạy Local (Đã cập nhật cho Lab 12)
 
 ```bash
-# 1. Setup
+# 1. Setup (Đã tạo giúp bạn)
 cp .env.example .env
 
-# 2. Chạy với Docker Compose
-docker compose up
+# 2. Chạy với Docker Compose (Cần sudo trên Linux)
+sudo docker compose up --build
 
-# 3. Test
-curl http://localhost/health
+# 3. Test (Lưu ý dùng cổng 8000)
+curl http://localhost:8000/health
 
-# 4. Lấy API key từ .env, test endpoint
+# 4. Test endpoint Agent
 API_KEY=$(grep AGENT_API_KEY .env | cut -d= -f2)
 curl -H "X-API-Key: $API_KEY" \
-     -X POST http://localhost/ask \
+     -X POST http://localhost:8000/ask \
      -H "Content-Type: application/json" \
      -d '{"question": "What is deployment?"}'
 ```

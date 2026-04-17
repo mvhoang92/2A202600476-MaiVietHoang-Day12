@@ -45,7 +45,7 @@
 
 ### Exercise 3.1: Railway deployment
 - **URL**: [https://2a202600476-maiviethoang-day12-production.up.railway.app/](https://2a202600476-maiviethoang-day12-production.up.railway.app/)
-- **Screenshot**: ![Railway Deployment](screenshots/railway_deploy.png)
+- **Screenshot**: ![Railway Deployment](screenshots/dashboard.png)
 
 ---
 
@@ -57,10 +57,13 @@
   - ✅ JWT Token Authentication (Role-based: student/teacher)
   - ✅ Rate Limiting (10 req/min cho student)
   - ✅ Cost Guard (Budget tracking cho từng user)
-- **Test Result**: Lấy token thành công, gửi request kèm token nhận được phản hồi kèm thông tin `usage` (còn 9 lượt).
+- **Test Result**: Lấy health thành công, gọi API `/ask` nhận được phản hồi kèm thông tin `usage` (Tokens và Cost) được lấy từ Redis. Xác thực API Key hoạt động chính xác.
+- **Screenshots**:
+  - ![Health Check](screenshots/running.png)
+  - ![API Test](screenshots/test.png)
 
 ### Exercise 4.4: Cost guard implementation
-- **Approach**: Sử dụng Redis để lưu trữ `usage_usd` theo từng `user_id` và `month`. Kiểm tra budget trước mỗi request gọi LLM.
+- **Approach**: Sử dụng Redis với thuật toán Sliding Window cho Rate Limit và Hash Map cho Cost Guard. Dữ liệu được lưu trữ theo `usage:{user_id}:{date}` để kiểm soát ngân sách theo ngày một cách chính xác và bền vững (stateless).
 
 ---
 
