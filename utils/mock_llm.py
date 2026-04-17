@@ -1,43 +1,27 @@
+# -*- coding: utf-8 -*-
 """
-Mock LLM — dùng chung cho tất cả ví dụ.
-Không cần API key thật. Trả lời giả lập để focus vào deployment concept.
+Mock LLM — Giả lập câu trả lời của AI để chạy offline không cần API Key.
 """
 import time
-import random
 
-
-MOCK_RESPONSES = {
-    "default": [
-        "Đây là câu trả lời từ AI agent (mock). Trong production, đây sẽ là response từ OpenAI/Anthropic.",
-        "Agent đang hoạt động tốt! (mock response) Hỏi thêm câu hỏi đi nhé.",
-        "Tôi là AI agent được deploy lên cloud. Câu hỏi của bạn đã được nhận.",
-    ],
-    "docker": ["Container là cách đóng gói app để chạy ở mọi nơi. Build once, run anywhere!"],
-    "deploy": ["Deployment là quá trình đưa code từ máy bạn lên server để người khác dùng được."],
-    "health": ["Agent đang hoạt động bình thường. All systems operational."],
-}
-
-
-def ask(question: str, delay: float = 0.1) -> str:
+def ask(question: str) -> str:
     """
-    Mock LLM call với delay giả lập latency thật.
+    Giả lập quá trình suy nghĩ và trả lời của AI.
     """
-    time.sleep(delay + random.uniform(0, 0.05))  # simulate API latency
-
+    # Giả lập độ trễ của mạng 
+    time.sleep(0.5)
+    
+    responses = {
+        "hello": "Xin chào! Tôi là trợ lý AI giả lập của bạn. Tôi đang chạy trên Docker!",
+        "health": "Hệ thống đang hoạt động tốt.",
+        "redis": "Redis là một kho lưu trữ dữ liệu cấu trúc trong bộ nhớ, dùng để làm database, cache và message broker.",
+        "deployment": "Triển khai Agent lên Cloud giúp ứng dụng của bạn có thể truy cập từ bất cứ đâu."
+    }
+    
+    # Tìm câu trả lời phù hợp hoặc trả về câu mặc định
     question_lower = question.lower()
-    for keyword, responses in MOCK_RESPONSES.items():
-        if keyword in question_lower:
-            return random.choice(responses)
-
-    return random.choice(MOCK_RESPONSES["default"])
-
-
-def ask_stream(question: str):
-    """
-    Mock streaming response — yield từng token.
-    """
-    response = ask(question)
-    words = response.split()
-    for word in words:
-        time.sleep(0.05)
-        yield word + " "
+    for key in responses:
+        if key in question_lower:
+            return responses[key]
+            
+    return f"Đây là câu trả lời giả lập cho câu hỏi: '{question}'. Trong thực tế, đây sẽ là nơi gọi GPT-4."

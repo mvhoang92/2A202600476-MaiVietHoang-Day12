@@ -1,0 +1,43 @@
+# --- STAGE 1: Builder ---
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY 06-lab-complete/requirements.txt .
+RUN pip install --upgrade pip && \
+    pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+
+
+# --- STAGE 2: Final ---
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Security: Run as non-root user
+RUN addgroup --system appgroup && adduser --system --group appuser
+
+# Install dependencies from wheels
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy production code
+COPY 06-lab-complete/app ./app
+COPY utils ./utils
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV ENVIRONMENT=production
+
+# Ownership for security
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+EXPOSE 8000
+
+# Run with Gunicorn for production
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "-b", "0.0.0.0:8000"]

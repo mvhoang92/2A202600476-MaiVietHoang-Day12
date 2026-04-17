@@ -1,0 +1,10 @@
+# railway.toml
+# Cấu hình để Railway build Dockerfile từ một thư mục con.
+
+[build]
+# Yêu cầu Railway sử dụng Dockerfile builder.
+builder = "DOCKERFILE"
+
+# Chỉ định đường dẫn đến Dockerfile của bạn.
+# Đường dẫn này được tính từ thư mục gốc của dự án.
+dockerfilePath = "02-docker/develop/Dockerfile"

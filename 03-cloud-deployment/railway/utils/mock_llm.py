@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Mock LLM — dùng chung cho tất cả ví dụ.
 Không cần API key thật. Trả lời giả lập để focus vào deployment concept.

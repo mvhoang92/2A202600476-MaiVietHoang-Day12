@@ -1,65 +1,39 @@
+# -*- coding: utf-8 -*-
 """
-Agent Railway-ready.
-Railway inject PORT env var tự động — agent phải dùng os.getenv("PORT").
+Agent đơn giản để demo Dockerfile cơ bản.
 """
 import os
 import time
-from datetime import datetime, timezone
 
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 import uvicorn
 from utils.mock_llm import ask
+from fastapi.responses import JSONResponse
 
-app = FastAPI(title="Agent on Railway", version="1.0.0")
+app = FastAPI(title="Agent Basic Docker")
 START_TIME = time.time()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
-)
 
 
 @app.get("/")
 def root():
-    return {
-        "message": "AI Agent running on Railway!",
-        "docs": "/docs",
-        "health": "/health",
-    }
+    return {"message": "Agent is running in a Docker container!"}
 
 
-@app.post("/ask")
-async def ask_agent(request: Request):
-    body = await request.json()
-    question = body.get("question", "")
-    if not question:
-        raise HTTPException(422, "question required")
-    return {
-        "question": question,
-        "answer": ask(question),
-        "platform": "Railway",
-    }
+@app.get("/ask")
+async def ask_agent(question: str):
+    answer = ask(question)
+    return JSONResponse(content={"answer": answer}, media_type="application/json; charset=utf-8")
 
 
 @app.get("/health")
 def health():
-    """
-    Railway sẽ check endpoint này định kỳ.
-    Trả về 200 = healthy. Non-200 = Railway restart container.
-    """
     return {
         "status": "ok",
         "uptime_seconds": round(time.time() - START_TIME, 1),
-        "platform": "Railway",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "container": True,
     }
 
 
 if __name__ == "__main__":
-    # ✅ Railway inject PORT — PHẢI đọc từ env
     port = int(os.getenv("PORT", 8000))
-    print(f"Starting on port {port} (from PORT env var)")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app="app:app", host="0.0.0.0", port=port)
