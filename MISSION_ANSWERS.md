@@ -44,16 +44,20 @@
 ## Part 3: Cloud Deployment
 
 ### Exercise 3.1: Railway deployment
-- **URL**: [Đang triển khai - Chờ link từ Railway]
-- **Screenshot**: [Sẽ cập nhật vào thư mục screenshots/]
+- **URL**: [https://2a202600476-maiviethoang-day12-production.up.railway.app/](https://2a202600476-maiviethoang-day12-production.up.railway.app/)
+- **Screenshot**: ![Railway Deployment](screenshots/railway_deploy.png)
 
 ---
 
 ## Part 4: API Security
 
-### Exercise 4.1-4.3: Test results
-- **Auth Test**: [Chờ kết quả chạy lệnh curl sau khi deploy]
-- **Rate Limit Test**: [Chờ kết quả chạy vòng lặp test]
+### Exercise 4.1: API Security Implementation
+- **Authentication**: Đã triển khai JWT (JSON Web Token) và API Key.
+- **Security Features**:
+  - ✅ JWT Token Authentication (Role-based: student/teacher)
+  - ✅ Rate Limiting (10 req/min cho student)
+  - ✅ Cost Guard (Budget tracking cho từng user)
+- **Test Result**: Lấy token thành công, gửi request kèm token nhận được phản hồi kèm thông tin `usage` (còn 9 lượt).
 
 ### Exercise 4.4: Cost guard implementation
 - **Approach**: Sử dụng Redis để lưu trữ `usage_usd` theo từng `user_id` và `month`. Kiểm tra budget trước mỗi request gọi LLM.
